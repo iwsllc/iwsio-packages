@@ -15,15 +15,15 @@ interface Movie {
 type Movies = Movie[]
 
 // very simple type assertions
-const isMovie = (data: unknown): data is Movie => data != null && typeof data === 'object' && 'title'	in data
+const isMovie = (data: unknown): data is Movie => data != null && typeof data === 'object' && 'title' in data
 const isError = (data: unknown): data is ErrorBody => data != null && typeof data === 'object' && 'message' in data
 
 describe('fetchTyped', () => {
 	beforeEach(() => {
-		vi.spyOn(global, 'fetch')
+		vi.spyOn(window, 'fetch')
 	})
 	it('should fetch with typed response on success', async () => {
-		vi.spyOn(global, 'fetch').mockReturnValue(Promise.resolve({ json: () => Promise.resolve({ data: 'test2' }) } as any))
+		vi.spyOn(window, 'fetch').mockReturnValue(Promise.resolve({ json: () => Promise.resolve({ data: 'test2' }) } as any))
 
 		const response = await fetchTyped<Thing, ErrorBody>('https://example.com/movies.json')
 		const result = await response.json() as Thing
@@ -31,7 +31,7 @@ describe('fetchTyped', () => {
 	})
 
 	it('should fetch with typed response on success with query string parameters', async () => {
-		const spyFetch = vi.spyOn(global, 'fetch').mockReturnValue(Promise.resolve({ json: () => Promise.resolve({ data: 'test2' }) } as any))
+		const spyFetch = vi.spyOn(window, 'fetch').mockReturnValue(Promise.resolve({ json: () => Promise.resolve({ data: 'test2' }) } as any))
 
 		const response = await fetchTyped<Thing, ErrorBody>('https://example.com/movies.json', { query: { pageIx: '0', pageSize: '20' } })
 		const result = await response.json() as Thing
@@ -41,7 +41,7 @@ describe('fetchTyped', () => {
 	})
 
 	it('should fetch with empty response on success', async () => {
-		vi.spyOn(global, 'fetch').mockReturnValue(Promise.resolve({ json: () => Promise.resolve(null) } as any))
+		vi.spyOn(window, 'fetch').mockReturnValue(Promise.resolve({ json: () => Promise.resolve(null) } as any))
 
 		const response = await fetchTyped('https://example.com/movies.json')
 		const result = await response.json()
@@ -49,7 +49,7 @@ describe('fetchTyped', () => {
 	})
 
 	it('should return typed Error when fail', async () => {
-		vi.spyOn(global, 'fetch').mockReturnValue(Promise.resolve({ ok: false, json: () => Promise.resolve({ message: 'error', stack: 'stack' }) } as any))
+		vi.spyOn(window, 'fetch').mockReturnValue(Promise.resolve({ ok: false, json: () => Promise.resolve({ message: 'error', stack: 'stack' }) } as any))
 
 		const response = await fetchTyped<Thing, ErrorBody>('https://example.com/movies.json')
 		let result: Thing | null = null

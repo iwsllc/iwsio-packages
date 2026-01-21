@@ -18,11 +18,12 @@ concurrency:
 jobs:
   testing:
     if: ${{github.event.pull_request.draft == false && !contains(github.event.head_commit.message, '#skip') }}
-    uses: iwsllc/workflows/.github/workflows/test.yaml@v2
+    uses: iwsllc/workflows/.github/workflows/test.yaml@v4
     with:
       registry-url: 'https://registry.npmjs.org'
       scope: '@iwsio'
+      use-pnpm: true
+      cache: pnpm
       node-version-file: '.nvmrc'
-      cache: npm
-      install-command: npm ci
-      test-command: npm run test -w packages/fetch
+      install-command: pnpm install
+      test-command: pnpm -F fetch test
