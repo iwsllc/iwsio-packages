@@ -7,7 +7,7 @@ export interface ResolveResponseOptions {
 
 export interface FetchOptions extends Record<string, unknown>, ResolveResponseOptions {
 	json?: unknown
-	query?: Record<string, string | string[]>
+	query?: Record<string, unknown> // query string parameters; allow anything and we'll serialize it internally
 }
 
 export type FetchArgs = FetchOptions & Partial<RequestInit>

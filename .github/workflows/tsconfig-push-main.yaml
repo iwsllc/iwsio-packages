@@ -15,10 +15,11 @@ jobs:
     uses: iwsllc/workflows/.github/workflows/version-as-app.yaml@main
     with:
       ref: main
-      cache: npm
+      use-pnpm: true
+      cache: pnpm
       node-version-file: '.nvmrc'
       scope: '@iwsio'
-      version-command: npm version patch -w packages/tsconfig
+      version-command: npm version patch -w packages/tsconfig || true
       version-workspace: packages/tsconfig
       tag-includes-name: true
     secrets:
@@ -27,16 +28,17 @@ jobs:
   publish:
     needs: version
     if: ${{ !contains(github.event.head_commit.message, '#skip') }}
-    uses: iwsllc/workflows/.github/workflows/publish.yaml@v2
+    uses: iwsllc/workflows/.github/workflows/publish.yaml@v4
     with:
       ref: main
-      cache: npm
+      use-pnpm: true
+      cache: pnpm
       node-version-file: '.nvmrc'
       scope: '@iwsio'
       registry-url: 'https://registry.npmjs.org'
-      install-command: 
-      build-command: 
-      publish-command: npm publish -w packages/tsconfig --access public
+      install-command:
+      build-command:
+      publish-command: pnpm -F tsconfig publish --access public
     secrets:
       # This token is used for reading npm packages; use when private packages are used
       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
