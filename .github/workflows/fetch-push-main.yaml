@@ -50,7 +50,7 @@ jobs:
       node-version-file: '.nvmrc'
       scope: '@iwsio'
       install-command: pnpm install
-      build-command: pnpm run build -w packages/fetch
+      build-command: pnpm -F fetch build
       publish-command: pnpm -F fetch publish --access public
     secrets:
       # This token is used for reading npm packages; use when private packages are used
