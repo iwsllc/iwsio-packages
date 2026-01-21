@@ -50,6 +50,7 @@ jobs:
       ref: main
       registry-url: 'https://registry.npmjs.org'
       use-pnpm: true
+      skip-node-auth: true
       cache: pnpm
       node-version-file: '.nvmrc'
       scope: '@iwsio'
