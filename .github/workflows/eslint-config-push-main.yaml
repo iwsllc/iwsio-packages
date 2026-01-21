@@ -31,9 +31,10 @@ jobs:
   publish:
     needs: version
     if: ${{ !contains(github.event.head_commit.message, '#skip') }}
-    uses: iwsllc/workflows/.github/workflows/publish.yaml@v4
+    uses: iwsllc/workflows/.github/workflows/publish.yaml@v5
     with:
       ref: main
+      skip-node-auth: true
       use-pnpm: true
       cache: pnpm
       node-version-file: '.nvmrc'
