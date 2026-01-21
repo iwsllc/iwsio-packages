@@ -15,8 +15,7 @@ jobs:
     uses: iwsllc/workflows/.github/workflows/version-as-app.yaml@main
     with:
       ref: main
-      use-pnpm: true
-      cache: pnpm
+      cache: ''
       node-version-file: '.nvmrc'
       scope: '@iwsio'
       version-command: npm version patch -w packages/eslint-config || true
