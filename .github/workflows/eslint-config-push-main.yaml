@@ -6,6 +6,10 @@ on:
     paths:
       - 'packages/eslint-config/**'
 
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
+
 jobs:
   version:
     if: ${{ !contains(github.event.head_commit.message, '#skip') }}
