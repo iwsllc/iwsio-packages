@@ -43,6 +43,8 @@ export * from './findAndDetermineWorkspacePackages.mjs'
  */
 export const configure = async (
 	{
+		includeTypeChecked = false,
+		includeTypeCheckedFiles = ['./apps/*/src/**/*.{cts,mts,ts,tsx}', './tools/*/src/**/*.{cts,mts,ts,tsx}', './packages/*/src/**/*.{cts,mts,ts,tsx}'],
 		includeReact = true,
 		autoFindMonorepoPackages = false,
 		excludeWorkspacesFromNodeRules = [],
@@ -85,7 +87,17 @@ export const configure = async (
 		// all projects:
 		eslint.configs.recommended,
 		tseslint.configs.recommended,
-
+		(includeTypeChecked
+			? {
+					files: includeTypeCheckedFiles,
+					extends: [tseslint.configs.recommendedTypeChecked],
+					languageOptions: {
+						parserOptions: {
+							projectService: true
+						}
+					}
+				}
+			: {}),
 		// JSX specific rules
 		...(includeReact
 			? [...jsxA11y,

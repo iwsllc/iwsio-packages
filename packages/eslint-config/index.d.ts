@@ -2,6 +2,17 @@ import type { ConfigArray } from '@eslint/config-array'
 export { ConfigArray }
 export interface CustomizeOptions {
 	/**
+	 * Include TypeChecked rules
+	 */
+	includeTypeChecked?: boolean
+	/**
+	 * List of glob patterns for files that should be type-checked.
+	 * Only used if `includeTypeChecked` is true.
+	 *
+	 * Default assumes only type checked files exist in 'src/*' files; this intentionally ignores files outside of src like vite.config.ts or setupFiles.ts
+	 */
+	includeTypeCheckedFiles: string[]
+	/**
 	 * If true, enables React specific rules and plugins.
 	 * This is useful for non-React projects or when using a different framework.
 	 * Default is true.

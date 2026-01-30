@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { fetchTyped } from './fetchTyped.js'
 
 const host = 'http://localhost:3000'

@@ -3,7 +3,7 @@ export class FetchError<T = unknown> extends Error {
 	isJson: boolean
 	status: number | undefined
 
-	constructor(message: string, status: number | undefined, body?: T | string | undefined) {
+	constructor(message: string, status: number | undefined, body?: T | string) {
 		super(message)
 		this.status = status
 		this.body = body
