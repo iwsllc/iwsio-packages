@@ -186,7 +186,8 @@ export const configure = async (
 			files: ['**/*.test.ts', '**/*.test.tsx', '**/*.test.mts', '**/*.test.cts', '**/__tests__/**/*', '**/__mocks__/**/*'],
 			rules: {
 				'@typescript-eslint/no-unused-expressions': 'off',
-				'@stylistic/max-statements-per-line': ['error', { max: 2 }]
+				'@stylistic/max-statements-per-line': ['error', { max: 2 }],
+				'preserve-caught-error': 'off' // allow throwing new errors to stop test workflow. IN this case we are likely testing raw errors and killing test success
 			}
 		},
 		// configuration rules

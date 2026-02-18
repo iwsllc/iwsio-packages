@@ -40,6 +40,7 @@ export async function findAndDetermineWorkspacePackages(rootDir, options = {}) {
 	const pnpmWorkspacePath = pnpmConfigFile != null ? join(rootDir, pnpmConfigFile) : undefined
 
 	// /** @type {string[] | undefined} */
+	// eslint-disable-next-line no-useless-assignment -- I think it's blind
 	let relativePackagePatterns = undefined
 
 	if (pnpmWorkspacePath != null) {
