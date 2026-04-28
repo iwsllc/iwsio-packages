@@ -15,7 +15,7 @@ export class FetchError<T = unknown> extends Error {
 		if (this.body == null) message = this.message
 		else {
 			// try to extract a message from the body
-			if (typeof this.body === 'string') message = this.body as string
+			if (typeof this.body === 'string') message = this.body
 			else if (typeof this.body === 'object') {
 				// a couple guesses
 				if ('message' in this.body && typeof this.body.message === 'string') message = this.body.message

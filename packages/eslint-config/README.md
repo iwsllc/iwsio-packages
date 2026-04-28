@@ -60,3 +60,7 @@ Override any one of these for your own configuration. Note that `debug` will pri
  - [typescript-eslint](https://typescript-eslint.io/getting-started)
  - [stylistic customize factory](https://eslint.style/guide/config-presets). 
 
+## Migrating from 2.x
+
+3.0 replaces `eslint-plugin-react` with [`@eslint-react/eslint-plugin`](https://eslint-react.xyz/) (required for ESLint v10 support). React rules are now namespaced under `@eslint-react/*` instead of `react/*`, with sub-namespaces like `@eslint-react/dom/*`, `@eslint-react/hooks-extra/*`, and `@eslint-react/naming-convention/*`. If you override React rules via `appendConfigs`, rename them — e.g. `react/jsx-key` → `@eslint-react/no-missing-key`, `react/no-danger-with-children` → `@eslint-react/dom/no-dangerously-set-innerhtml-with-children`. See the upstream [migration guide](https://eslint-react.xyz/docs/migrating-from-eslint-plugin-react).
+

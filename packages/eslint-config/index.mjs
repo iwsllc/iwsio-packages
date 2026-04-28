@@ -1,10 +1,10 @@
 import eslint from '@eslint/js'
+import eslintReact from '@eslint-react/eslint-plugin'
 import stylistic from '@stylistic/eslint-plugin'
 import { defineConfig } from 'eslint/config'
 import tailwind from 'eslint-plugin-better-tailwindcss'
 import nodePlugin from 'eslint-plugin-n'
 import promisePlugin from 'eslint-plugin-promise'
-import reactPlugin from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
@@ -103,7 +103,8 @@ export const configure = async (
 			? [...jsxA11y,
 					reactHooks.configs.flat.recommended,
 					reactRefreshConfig,
-					tailwind.config
+					tailwind.config,
+					eslintReact.configs['recommended-typescript']
 				]
 			: []),
 
@@ -113,8 +114,7 @@ export const configure = async (
 
 		{
 			plugins: {
-				promise: promisePlugin,
-				...(includeReact ? { react: reactPlugin } : {})
+				promise: promisePlugin
 			},
 			languageOptions: {
 				ecmaVersion: 2022,
@@ -126,13 +126,6 @@ export const configure = async (
 			},
 			rules: {
 				...promisePlugin.configs.recommended.rules,
-
-				...(includeReact
-					? {
-							...reactPlugin.configs.recommended.rules,
-							...reactPlugin.configs['jsx-runtime'].rules
-						}
-					: {}),
 
 				// custom rules here
 				'promise/always-return': ['error', { ignoreLastCallback: true }],
@@ -151,16 +144,6 @@ export const configure = async (
 					ignoreExport: false
 				}],
 				'object-shorthand': ['error', 'always']
-			},
-
-			settings: {
-				...(includeReact
-					? {
-							react: {
-								version: 'detect' // You can add this if you get a warning about the React version when you lint
-							}
-						}
-					: {})
 			}
 		},
 		(finalNodeProjects.length > 0 && ({
