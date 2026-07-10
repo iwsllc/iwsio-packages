@@ -20,10 +20,14 @@ export interface FetchEmptyResponse<E> extends Omit<Response, 'json'> {
 	json: () => Promise<E | undefined>
 }
 
-export interface IdBody { id: string }
+export interface IdBody {
+	id: string
+}
 
 export type WithId<T> = Omit<T, 'id'> & IdBody
 
-export interface AffectedBody { count: number }
+export interface AffectedBody {
+	count: number
+}
 
 export type DataBody<T> = Omit<Partial<T>, 'id'>

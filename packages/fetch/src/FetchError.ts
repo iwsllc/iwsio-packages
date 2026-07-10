@@ -11,7 +11,7 @@ export class FetchError<T = unknown> extends Error {
 	}
 
 	resolveMessage() {
-		let message
+		let message: string | undefined
 		if (this.body == null) message = this.message
 		else {
 			// try to extract a message from the body

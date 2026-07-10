@@ -1,0 +1,102 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.5.3/schema.json",
+	"root": false,
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab",
+		"lineWidth": 120
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "single",
+			"semicolons": "asNeeded",
+			"trailingCommas": "none"
+		}
+	},
+	"css": {
+		"parser": {
+			"tailwindDirectives": true
+		}
+	},
+	"json": {
+		"formatter": {
+			"enabled": true
+		}
+	},
+	"assist": {
+		"enabled": true,
+		"actions": {
+			"source": {
+				"organizeImports": "on"
+			}
+		}
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"preset": "recommended",
+			"a11y": {
+				"noSvgWithoutTitle": "off",
+				"useButtonType": "off"
+			},
+			"style": {
+				"useConst": "error",
+				"useConsistentArrayType": {
+					"level": "error",
+					"options": { "syntax": "shorthand" }
+				},
+				"noUselessElse": "error",
+				"useShorthandAssign": "error"
+			},
+			"suspicious": {
+				"noImplicitAnyLet": "warn",
+				"noAssignInExpressions": "off"
+			},
+			"correctness": {
+				"noUnusedVariables": {
+					"level": "error",
+					"options": { "ignoreRestSiblings": true }
+				},
+				"noUnusedFunctionParameters": "error",
+				"noUnusedImports": "error"
+			},
+			"complexity": {
+				"useArrowFunction": "error",
+				"useOptionalChain": "error"
+			}
+		}
+	},
+	"overrides": [
+		{
+			"includes": [
+				"**/*.test.ts",
+				"**/*.test.tsx",
+				"**/*.test.mts",
+				"**/*.test.cts",
+				"**/__tests__/**",
+				"**/__mocks__/**"
+			],
+			"linter": {
+				"rules": {
+					"suspicious": {
+						"noExplicitAny": "off",
+						"noExportsInTest": "off"
+					},
+					"correctness": {
+						"noUnusedFunctionParameters": "off"
+					}
+				}
+			}
+		},
+		{
+			"includes": ["**/*.config.*", "**/vite.config.mts", "**/vitest.config.ts"],
+			"linter": {
+				"rules": {
+					"style": {
+						"noRestrictedGlobals": "off"
+					}
+				}
+			}
+		}
+	]
+}

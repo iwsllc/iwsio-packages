@@ -18,7 +18,7 @@ concurrency:
 jobs:
   testing:
     if: ${{github.event.pull_request.draft == false && !contains(github.event.head_commit.message, '#skip') }}
-    uses: iwsllc/workflows/.github/workflows/test.yaml@v4
+    uses: iwsllc/workflows/.github/workflows/test.yaml@v8
     with:
       registry-url: 'https://registry.npmjs.org'
       scope: '@iwsio'

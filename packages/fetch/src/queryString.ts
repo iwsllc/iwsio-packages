@@ -1,5 +1,5 @@
 const isString = (value: unknown): value is string => typeof value === 'string'
-const isNumber = (value: unknown): value is number => typeof value === 'number' && !isNaN(value)
+const isNumber = (value: unknown): value is number => typeof value === 'number' && !Number.isNaN(value)
 const isBoolean = (value: unknown): value is boolean => typeof value === 'boolean'
 const isDate = (value: unknown): value is Date => value instanceof Date
 
@@ -17,10 +17,12 @@ function getPrimitiveValue(value: unknown): string | undefined {
 }
 export function getSerializedValue(value: unknown): string | undefined {
 	if (Array.isArray(value)) {
-		return value.map(v => getPrimitiveValue(v)).filter(v => v != null).join(',')
-	} else {
-		return getPrimitiveValue(value)
+		return value
+			.map((v) => getPrimitiveValue(v))
+			.filter((v) => v != null)
+			.join(',')
 	}
+	return getPrimitiveValue(value)
 }
 
 /**
@@ -52,16 +54,20 @@ export function stringify(query: Record<string, unknown> = {}): string {
 		let encodedValue: string | undefined | string[]
 		if (value != null) {
 			if (Array.isArray(value)) {
-				encodedValue = value.map((v) => {
-					const serialized = getSerializedValue(v)
-					return serialized != null ? encodeURIComponent(serialized) : undefined
-				}).filter(v => v != null)
+				encodedValue = value
+					.map((v) => {
+						const serialized = getSerializedValue(v)
+						return serialized != null ? encodeURIComponent(serialized) : undefined
+					})
+					.filter((v) => v != null)
 			} else {
 				encodedValue = getSerializedValue(value)
 			}
 			if (encodedValue == null) continue
 			// goal here is to serialize arrays as multiple key value pairs
-			kvp = Array.isArray(encodedValue) ? encodedValue.map(v => `&${encodeURIComponent(key)}=${v}`).join('') : `${encodeURIComponent(key)}=${encodedValue}`
+			kvp = Array.isArray(encodedValue)
+				? encodedValue.map((v) => `&${encodeURIComponent(key)}=${v}`).join('')
+				: `${encodeURIComponent(key)}=${encodedValue}`
 			if (kvp[0] === '&') kvp = kvp.substring(1) // trim off leading &
 			if (added === 0) result += '?'
 			else result += '&'

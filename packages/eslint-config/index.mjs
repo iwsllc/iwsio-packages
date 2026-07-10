@@ -41,36 +41,43 @@ export * from './findAndDetermineWorkspacePackages.mjs'
  * export default configs
  * ```
  */
-export const configure = async (
-	{
-		includeTypeChecked = false,
-		includeTypeCheckedFiles = ['./apps/*/src/**/*.{cts,mts,ts,tsx}', './tools/*/src/**/*.{cts,mts,ts,tsx}', './packages/*/src/**/*.{cts,mts,ts,tsx}'],
-		includeReact = true,
-		autoFindMonorepoPackages = false,
-		excludeWorkspacesFromNodeRules = [],
-		rootDir,
-		monoRepoPackages = [],
-		monoRepoNodeProjects = [],
-		stylisticInit = {
-			braceStyle: '1tbs',
-			commaDangle: 'never',
-			indent: 'tab',
-			jsx: true,
-			quotes: 'single',
-			semi: false
-		},
-		ignores = [],
-		appendConfigs = [],
-		debug = false
-	}) => {
+export const configure = async ({
+	includeTypeChecked = false,
+	includeTypeCheckedFiles = [
+		'./apps/*/src/**/*.{cts,mts,ts,tsx}',
+		'./tools/*/src/**/*.{cts,mts,ts,tsx}',
+		'./packages/*/src/**/*.{cts,mts,ts,tsx}'
+	],
+	includeReact = true,
+	autoFindMonorepoPackages = false,
+	excludeWorkspacesFromNodeRules = [],
+	rootDir,
+	monoRepoPackages = [],
+	monoRepoNodeProjects = [],
+	stylisticInit = {
+		braceStyle: '1tbs',
+		commaDangle: 'never',
+		indent: 'tab',
+		jsx: true,
+		quotes: 'single',
+		semi: false
+	},
+	ignores = [],
+	appendConfigs = [],
+	debug = false
+}) => {
 	let finalMonoRepoPackages = monoRepoPackages
 	let finalNodeProjects = monoRepoNodeProjects
 	if (autoFindMonorepoPackages) {
 		if (rootDir == null) throw new Error('rootDir must be provided when autoFindMonorepoPackages is true')
 		// dynamically find monorepo packages
-		const workspacePackages = await findAndDetermineWorkspacePackages(rootDir, { debug })
-		finalMonoRepoPackages = workspacePackages.map(p => p.name)
-		finalNodeProjects = workspacePackages.map(p => p.dir.replace(rootDir, '')).filter(p => !excludeWorkspacesFromNodeRules.includes(p)) // relative paths
+		const workspacePackages = await findAndDetermineWorkspacePackages(rootDir, {
+			debug
+		})
+		finalMonoRepoPackages = workspacePackages.map((p) => p.name)
+		finalNodeProjects = workspacePackages
+			.map((p) => p.dir.replace(rootDir, ''))
+			.filter((p) => !excludeWorkspacesFromNodeRules.includes(p)) // relative paths
 
 		if (debug) {
 			console.log('Auto-detected monorepo packages for ESLint config:')
@@ -87,7 +94,7 @@ export const configure = async (
 		// all projects:
 		eslint.configs.recommended,
 		tseslint.configs.recommended,
-		(includeTypeChecked
+		includeTypeChecked
 			? {
 					files: includeTypeCheckedFiles,
 					extends: [tseslint.configs.recommendedTypeChecked],
@@ -97,10 +104,11 @@ export const configure = async (
 						}
 					}
 				}
-			: {}),
+			: {},
 		// JSX specific rules
 		...(includeReact
-			? [...jsxA11y,
+			? [
+					...jsxA11y,
 					reactHooks.configs.flat.recommended,
 					reactRefreshConfig,
 					tailwind.config,
@@ -132,23 +140,29 @@ export const configure = async (
 
 				'@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
 				'@typescript-eslint/no-explicit-any': 'off',
-				'@typescript-eslint/no-unused-vars': ['error', {
-					argsIgnorePattern: '^_',
-					varsIgnorePattern: '^_',
-					destructuredArrayIgnorePattern: '^_',
-					caughtErrorsIgnorePattern: '^_'
-				}],
-				'no-useless-rename': ['error', {
-					ignoreDestructuring: false,
-					ignoreImport: false,
-					ignoreExport: false
-				}],
+				'@typescript-eslint/no-unused-vars': [
+					'error',
+					{
+						argsIgnorePattern: '^_',
+						varsIgnorePattern: '^_',
+						destructuredArrayIgnorePattern: '^_',
+						caughtErrorsIgnorePattern: '^_'
+					}
+				],
+				'no-useless-rename': [
+					'error',
+					{
+						ignoreDestructuring: false,
+						ignoreImport: false,
+						ignoreExport: false
+					}
+				],
 				'object-shorthand': ['error', 'always']
 			}
 		},
-		(finalNodeProjects.length > 0 && ({
+		finalNodeProjects.length > 0 && {
 			// node rules
-			files: finalNodeProjects.map(path => `${path}/**/*`),
+			files: finalNodeProjects.map((path) => `${path}/**/*`),
 
 			plugins: {
 				n: nodePlugin
@@ -159,14 +173,24 @@ export const configure = async (
 
 				// custom
 
-				'n/no-extraneous-import': ['error', {
-					allowModules: [...finalMonoRepoPackages]
-				}]
+				'n/no-extraneous-import': [
+					'error',
+					{
+						allowModules: [...finalMonoRepoPackages]
+					}
+				]
 			}
-		})),
+		},
 		// testing rules
 		{
-			files: ['**/*.test.ts', '**/*.test.tsx', '**/*.test.mts', '**/*.test.cts', '**/__tests__/**/*', '**/__mocks__/**/*'],
+			files: [
+				'**/*.test.ts',
+				'**/*.test.tsx',
+				'**/*.test.mts',
+				'**/*.test.cts',
+				'**/__tests__/**/*',
+				'**/__mocks__/**/*'
+			],
 			rules: {
 				'@typescript-eslint/no-unused-expressions': 'off',
 				'@stylistic/max-statements-per-line': ['error', { max: 2 }],
@@ -185,9 +209,10 @@ export const configure = async (
 		...appendConfigs
 	]
 	if (debug) {
-		console.dir(lintConfigs.filter(c => !!c), { depth: 3, colors: true })
+		console.dir(
+			lintConfigs.filter((c) => !!c),
+			{ depth: 3, colors: true }
+		)
 	}
-	return [
-		...defineConfig(lintConfigs.filter(c => !!c))
-	]
+	return [...defineConfig(lintConfigs.filter((c) => !!c))]
 }

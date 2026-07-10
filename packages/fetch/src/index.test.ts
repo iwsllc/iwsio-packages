@@ -8,7 +8,11 @@ describe('Index', () => {
 	describe('setupFetch', () => {
 		describe('getOne', () => {
 			it('getOne with response', async () => {
-				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: true, status: 200, text: () => Promise.resolve(JSON.stringify({ something: 'anything' })) } as any)
+				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+					ok: true,
+					status: 200,
+					text: () => Promise.resolve(JSON.stringify({ something: 'anything' }))
+				} as any)
 				const { getOne } = setupFetch('http://localhost:3000')
 				const result = await getOne<{ something: string }>('/api/v1/users', '5')
 				expect(spy).toHaveBeenCalledWith('http://localhost:3000/api/v1/users/5', {
@@ -21,7 +25,7 @@ describe('Index', () => {
 			})
 			it('getOne with general exception', async () => {
 				vi.spyOn(globalThis, 'fetch').mockRejectedValueOnce(new Error('Failed to fetch'))
-				const { getOne } = setupFetch<{ error?: string, stack?: string }>('http://localhost:3000')
+				const { getOne } = setupFetch<{ error?: string; stack?: string }>('http://localhost:3000')
 				try {
 					await getOne('/api/v1/users', '5')
 				} catch (err) {
@@ -29,11 +33,15 @@ describe('Index', () => {
 					expect(err.message).toEqual('Failed to fetch')
 				}
 			})
-			const isErrorBody = (data: unknown): data is { error: string, stack: string } => {
+			const isErrorBody = (data: unknown): data is { error: string; stack: string } => {
 				return data != null && typeof data === 'object' && 'error' in data && 'stack' in data
 			}
 			it('getOne with http non-success', async () => {
-				vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: false, status: 404, text: () => Promise.resolve(JSON.stringify({ error: 'not found', stack: 'stack' })) } as any)
+				vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+					ok: false,
+					status: 404,
+					text: () => Promise.resolve(JSON.stringify({ error: 'not found', stack: 'stack' }))
+				} as any)
 				const { getOne } = setupFetch('http://localhost:3000')
 				try {
 					await getOne('/api/v1/users', '5')
@@ -48,7 +56,11 @@ describe('Index', () => {
 				}
 			})
 			it('getOne with http non-success, text body', async () => {
-				vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: false, status: 404, text: () => Promise.resolve('Not found') } as any)
+				vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+					ok: false,
+					status: 404,
+					text: () => Promise.resolve('Not found')
+				} as any)
 				const { getOne } = setupFetch('http://localhost:3000')
 				try {
 					await getOne('/api/v1/users', '5')
@@ -61,7 +73,11 @@ describe('Index', () => {
 				}
 			})
 			it('getOne with response and query string params', async () => {
-				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: true, status: 200, text: () => Promise.resolve(JSON.stringify({ something: 'anything' })) } as any)
+				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+					ok: true,
+					status: 200,
+					text: () => Promise.resolve(JSON.stringify({ something: 'anything' }))
+				} as any)
 				const { getOne } = setupFetch('http://localhost:3000')
 				const result = await getOne<{ something: string }>('/api/v1/users', '5', { query: { something: 'anything' } })
 				expect(spy).toHaveBeenCalledWith('http://localhost:3000/api/v1/users/5?something=anything', {
@@ -75,7 +91,11 @@ describe('Index', () => {
 		})
 		describe('get', () => {
 			it('get with response', async () => {
-				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: true, status: 200, text: () => Promise.resolve(JSON.stringify({ something: 'anything' })) } as any)
+				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+					ok: true,
+					status: 200,
+					text: () => Promise.resolve(JSON.stringify({ something: 'anything' }))
+				} as any)
 				const { get } = setupFetch('http://localhost:3000')
 				const result = await get<{ something: string }>('/api/v1/users')
 				expect(spy).toHaveBeenCalledWith('http://localhost:3000/api/v1/users', {
@@ -87,9 +107,15 @@ describe('Index', () => {
 				expect(result).toEqual({ something: 'anything' })
 			})
 			it('get with query string and response', async () => {
-				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: true, status: 200, text: () => Promise.resolve(JSON.stringify({ something: 'anything' })) } as any)
+				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+					ok: true,
+					status: 200,
+					text: () => Promise.resolve(JSON.stringify({ something: 'anything' }))
+				} as any)
 				const { get } = setupFetch('http://localhost:3000')
-				const result = await get<{ something: string }>('/api/v1/users', { query: { something: 'anything' } })
+				const result = await get<{ something: string }>('/api/v1/users', {
+					query: { something: 'anything' }
+				})
 				expect(spy).toHaveBeenCalledWith('http://localhost:3000/api/v1/users?something=anything', {
 					method: 'GET',
 					headers: {
@@ -101,7 +127,11 @@ describe('Index', () => {
 		})
 		describe('getMany', () => {
 			it('getMany with response', async () => {
-				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: true, status: 200, text: () => Promise.resolve(JSON.stringify([{ something: 'anything' }])) } as any)
+				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+					ok: true,
+					status: 200,
+					text: () => Promise.resolve(JSON.stringify([{ something: 'anything' }]))
+				} as any)
 				const { getMany } = setupFetch('http://localhost:3000')
 				const result = await getMany<{ something: string }>('/api/v1/users')
 				expect(spy).toHaveBeenCalledWith('http://localhost:3000/api/v1/users', {
@@ -115,7 +145,11 @@ describe('Index', () => {
 		})
 		describe('delOne', () => {
 			it('delOne without request body and response', async () => {
-				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: true, status: 200, text: () => Promise.resolve(null) } as any)
+				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+					ok: true,
+					status: 200,
+					text: () => Promise.resolve(null)
+				} as any)
 				const { delOne } = setupFetch('http://localhost:3000')
 				const result = await delOne('/api/v1/users', '5')
 				expect(spy).toHaveBeenCalledWith('http://localhost:3000/api/v1/users/5', {
@@ -127,7 +161,11 @@ describe('Index', () => {
 				expect(result).toEqual(null)
 			})
 			it('delOne with request body and no response', async () => {
-				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: true, status: 200, text: () => Promise.resolve(null) } as any)
+				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+					ok: true,
+					status: 200,
+					text: () => Promise.resolve(null)
+				} as any)
 				const { delOne } = setupFetch('http://localhost:3000')
 				const result = await delOne<{ anything: string }>('/api/v1/users', '5', { anything: 'something' })
 				expect(spy).toHaveBeenCalledWith('http://localhost:3000/api/v1/users/5', {
@@ -140,9 +178,15 @@ describe('Index', () => {
 				expect(result).toEqual(null)
 			})
 			it('delOne with request body and response', async () => {
-				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: true, status: 200, text: () => Promise.resolve(JSON.stringify({ something: 'anything' })) } as any)
+				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+					ok: true,
+					status: 200,
+					text: () => Promise.resolve(JSON.stringify({ something: 'anything' }))
+				} as any)
 				const { delOne } = setupFetch('http://localhost:3000')
-				const result = await delOne<{ anything: string }, { something: string }>('/api/v1/users', '5', { anything: 'something' })
+				const result = await delOne<{ anything: string }, { something: string }>('/api/v1/users', '5', {
+					anything: 'something'
+				})
 				expect(spy).toHaveBeenCalledWith('http://localhost:3000/api/v1/users/5', {
 					method: 'DELETE',
 					body: JSON.stringify({ anything: 'something' }),
@@ -155,7 +199,11 @@ describe('Index', () => {
 		})
 		describe('del', () => {
 			it('del without request body and response', async () => {
-				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: true, status: 200, text: () => Promise.resolve(null) } as any)
+				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+					ok: true,
+					status: 200,
+					text: () => Promise.resolve(null)
+				} as any)
 				const { del } = setupFetch('http://localhost:3000')
 				const result = await del('/api/v1/users')
 				expect(spy).toHaveBeenCalledWith('http://localhost:3000/api/v1/users', {
@@ -167,9 +215,15 @@ describe('Index', () => {
 				expect(result).toEqual(null)
 			})
 			it('del with request body and no response', async () => {
-				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: true, status: 200, text: () => Promise.resolve(null) } as any)
+				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+					ok: true,
+					status: 200,
+					text: () => Promise.resolve(null)
+				} as any)
 				const { del } = setupFetch('http://localhost:3000')
-				const result = await del<{ anything: string }>('/api/v1/users', { anything: 'something' })
+				const result = await del<{ anything: string }>('/api/v1/users', {
+					anything: 'something'
+				})
 				expect(spy).toHaveBeenCalledWith('http://localhost:3000/api/v1/users', {
 					method: 'DELETE',
 					body: JSON.stringify({ anything: 'something' }),
@@ -180,9 +234,15 @@ describe('Index', () => {
 				expect(result).toEqual(null)
 			})
 			it('del with request body and response', async () => {
-				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: true, status: 200, text: () => Promise.resolve(JSON.stringify({ something: 'anything' })) } as any)
+				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+					ok: true,
+					status: 200,
+					text: () => Promise.resolve(JSON.stringify({ something: 'anything' }))
+				} as any)
 				const { del } = setupFetch('http://localhost:3000')
-				const result = await del<{ anything: string }, { something: string }>('/api/v1/users', { anything: 'something' })
+				const result = await del<{ anything: string }, { something: string }>('/api/v1/users', {
+					anything: 'something'
+				})
 				expect(spy).toHaveBeenCalledWith('http://localhost:3000/api/v1/users', {
 					method: 'DELETE',
 					body: JSON.stringify({ anything: 'something' }),
@@ -195,7 +255,11 @@ describe('Index', () => {
 		})
 		describe('post', () => {
 			it('post without request body and response', async () => {
-				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: true, status: 200, text: () => Promise.resolve(null) } as any)
+				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+					ok: true,
+					status: 200,
+					text: () => Promise.resolve(null)
+				} as any)
 				const { post } = setupFetch('http://localhost:3000')
 				const result = await post('/api/v1/users')
 				expect(spy).toHaveBeenCalledWith('http://localhost:3000/api/v1/users', {
@@ -208,9 +272,15 @@ describe('Index', () => {
 				expect(result).toEqual(null)
 			})
 			it('post with request body and no response', async () => {
-				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: true, status: 200, text: () => Promise.resolve(null) } as any)
+				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+					ok: true,
+					status: 200,
+					text: () => Promise.resolve(null)
+				} as any)
 				const { post } = setupFetch('http://localhost:3000')
-				const result = await post<{ anything: string }>('/api/v1/users', { anything: 'something' })
+				const result = await post<{ anything: string }>('/api/v1/users', {
+					anything: 'something'
+				})
 				expect(spy).toHaveBeenCalledWith('http://localhost:3000/api/v1/users', {
 					method: 'POST',
 					body: JSON.stringify({ anything: 'something' }),
@@ -221,9 +291,15 @@ describe('Index', () => {
 				expect(result).toEqual(null)
 			})
 			it('post with request body and response', async () => {
-				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: true, status: 200, text: () => Promise.resolve(JSON.stringify({ something: 'anything' })) } as any)
+				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+					ok: true,
+					status: 200,
+					text: () => Promise.resolve(JSON.stringify({ something: 'anything' }))
+				} as any)
 				const { post } = setupFetch('http://localhost:3000')
-				const result = await post<{ anything: string }, { something: string }>('/api/v1/users', { anything: 'something' })
+				const result = await post<{ anything: string }, { something: string }>('/api/v1/users', {
+					anything: 'something'
+				})
 				expect(spy).toHaveBeenCalledWith('http://localhost:3000/api/v1/users', {
 					method: 'POST',
 					body: JSON.stringify({ anything: 'something' }),
@@ -236,7 +312,11 @@ describe('Index', () => {
 		})
 		describe('postOne', () => {
 			it('postOne without request body and response', async () => {
-				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: true, status: 200, text: () => Promise.resolve(null) } as any)
+				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+					ok: true,
+					status: 200,
+					text: () => Promise.resolve(null)
+				} as any)
 				const { postOne } = setupFetch('http://localhost:3000')
 				const result = await postOne('/api/v1/users', '5')
 				expect(spy).toHaveBeenCalledWith('http://localhost:3000/api/v1/users/5', {
@@ -248,7 +328,11 @@ describe('Index', () => {
 				expect(result).toEqual(null)
 			})
 			it('postOne with request body and no response', async () => {
-				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: true, status: 200, text: () => Promise.resolve(null) } as any)
+				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+					ok: true,
+					status: 200,
+					text: () => Promise.resolve(null)
+				} as any)
 				const { postOne } = setupFetch('http://localhost:3000')
 				const result = await postOne<{ anything: string }>('/api/v1/users', '5', { anything: 'something' })
 				expect(spy).toHaveBeenCalledWith('http://localhost:3000/api/v1/users/5', {
@@ -261,9 +345,15 @@ describe('Index', () => {
 				expect(result).toEqual(null)
 			})
 			it('postOne with request body and response', async () => {
-				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: true, status: 200, text: () => Promise.resolve(JSON.stringify({ something: 'anything' })) } as any)
+				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+					ok: true,
+					status: 200,
+					text: () => Promise.resolve(JSON.stringify({ something: 'anything' }))
+				} as any)
 				const { postOne } = setupFetch('http://localhost:3000')
-				const result = await postOne<{ anything: string }, { something: string }>('/api/v1/users', '5', { anything: 'something' })
+				const result = await postOne<{ anything: string }, { something: string }>('/api/v1/users', '5', {
+					anything: 'something'
+				})
 				expect(spy).toHaveBeenCalledWith('http://localhost:3000/api/v1/users/5', {
 					method: 'POST',
 					body: JSON.stringify({ anything: 'something' }),
@@ -276,7 +366,11 @@ describe('Index', () => {
 		})
 		describe('put', () => {
 			it('put without request body and response', async () => {
-				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: true, status: 200, text: () => Promise.resolve(null) } as any)
+				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+					ok: true,
+					status: 200,
+					text: () => Promise.resolve(null)
+				} as any)
 				const { put } = setupFetch('http://localhost:3000')
 				const result = await put('/api/v1/users')
 				expect(spy).toHaveBeenCalledWith('http://localhost:3000/api/v1/users', {
@@ -288,9 +382,15 @@ describe('Index', () => {
 				expect(result).toEqual(null)
 			})
 			it('put with request body and no response', async () => {
-				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: true, status: 200, text: () => Promise.resolve(null) } as any)
+				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+					ok: true,
+					status: 200,
+					text: () => Promise.resolve(null)
+				} as any)
 				const { put } = setupFetch('http://localhost:3000')
-				const result = await put<{ anything: string }>('/api/v1/users', { anything: 'something' })
+				const result = await put<{ anything: string }>('/api/v1/users', {
+					anything: 'something'
+				})
 				expect(spy).toHaveBeenCalledWith('http://localhost:3000/api/v1/users', {
 					method: 'PUT',
 					body: JSON.stringify({ anything: 'something' }),
@@ -301,9 +401,15 @@ describe('Index', () => {
 				expect(result).toEqual(null)
 			})
 			it('put with request body and response', async () => {
-				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: true, status: 200, text: () => Promise.resolve(JSON.stringify({ something: 'anything' })) } as any)
+				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+					ok: true,
+					status: 200,
+					text: () => Promise.resolve(JSON.stringify({ something: 'anything' }))
+				} as any)
 				const { put } = setupFetch('http://localhost:3000')
-				const result = await put<{ anything: string }, { something: string }>('/api/v1/users', { anything: 'something' })
+				const result = await put<{ anything: string }, { something: string }>('/api/v1/users', {
+					anything: 'something'
+				})
 				expect(spy).toHaveBeenCalledWith('http://localhost:3000/api/v1/users', {
 					method: 'PUT',
 					body: JSON.stringify({ anything: 'something' }),
@@ -316,7 +422,11 @@ describe('Index', () => {
 		})
 		describe('putOne', () => {
 			it('putOne without request body and response', async () => {
-				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: true, status: 200, text: () => Promise.resolve(null) } as any)
+				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+					ok: true,
+					status: 200,
+					text: () => Promise.resolve(null)
+				} as any)
 				const { putOne } = setupFetch('http://localhost:3000')
 				const result = await putOne('/api/v1/users', '5')
 				expect(spy).toHaveBeenCalledWith('http://localhost:3000/api/v1/users/5', {
@@ -328,7 +438,11 @@ describe('Index', () => {
 				expect(result).toEqual(null)
 			})
 			it('putOne with request body and no response', async () => {
-				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: true, status: 200, text: () => Promise.resolve(null) } as any)
+				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+					ok: true,
+					status: 200,
+					text: () => Promise.resolve(null)
+				} as any)
 				const { putOne } = setupFetch('http://localhost:3000')
 				const result = await putOne<{ anything: string }>('/api/v1/users', '5', { anything: 'something' })
 				expect(spy).toHaveBeenCalledWith('http://localhost:3000/api/v1/users/5', {
@@ -341,9 +455,15 @@ describe('Index', () => {
 				expect(result).toEqual(null)
 			})
 			it('putOne with request body and response', async () => {
-				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: true, status: 200, text: () => Promise.resolve(JSON.stringify({ something: 'anything' })) } as any)
+				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+					ok: true,
+					status: 200,
+					text: () => Promise.resolve(JSON.stringify({ something: 'anything' }))
+				} as any)
 				const { putOne } = setupFetch('http://localhost:3000')
-				const result = await putOne<{ anything: string }, { something: string }>('/api/v1/users', '5', { anything: 'something' })
+				const result = await putOne<{ anything: string }, { something: string }>('/api/v1/users', '5', {
+					anything: 'something'
+				})
 				expect(spy).toHaveBeenCalledWith('http://localhost:3000/api/v1/users/5', {
 					method: 'PUT',
 					body: JSON.stringify({ anything: 'something' }),
@@ -356,7 +476,11 @@ describe('Index', () => {
 		})
 		describe('patch', () => {
 			it('patch without request body and response', async () => {
-				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: true, status: 200, text: () => Promise.resolve(null) } as any)
+				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+					ok: true,
+					status: 200,
+					text: () => Promise.resolve(null)
+				} as any)
 				const { patch } = setupFetch('http://localhost:3000')
 				const result = await patch('/api/v1/users')
 				expect(spy).toHaveBeenCalledWith('http://localhost:3000/api/v1/users', {
@@ -368,9 +492,15 @@ describe('Index', () => {
 				expect(result).toEqual(null)
 			})
 			it('patch with request body and no response', async () => {
-				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: true, status: 200, text: () => Promise.resolve(null) } as any)
+				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+					ok: true,
+					status: 200,
+					text: () => Promise.resolve(null)
+				} as any)
 				const { patch } = setupFetch('http://localhost:3000')
-				const result = await patch<{ anything: string }>('/api/v1/users', { anything: 'something' })
+				const result = await patch<{ anything: string }>('/api/v1/users', {
+					anything: 'something'
+				})
 				expect(spy).toHaveBeenCalledWith('http://localhost:3000/api/v1/users', {
 					method: 'PATCH',
 					body: JSON.stringify({ anything: 'something' }),
@@ -381,9 +511,15 @@ describe('Index', () => {
 				expect(result).toEqual(null)
 			})
 			it('patch with request body and response', async () => {
-				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: true, status: 200, text: () => Promise.resolve(JSON.stringify({ something: 'anything' })) } as any)
+				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+					ok: true,
+					status: 200,
+					text: () => Promise.resolve(JSON.stringify({ something: 'anything' }))
+				} as any)
 				const { patch } = setupFetch('http://localhost:3000')
-				const result = await patch<{ anything: string }, { something: string }>('/api/v1/users', { anything: 'something' })
+				const result = await patch<{ anything: string }, { something: string }>('/api/v1/users', {
+					anything: 'something'
+				})
 				expect(spy).toHaveBeenCalledWith('http://localhost:3000/api/v1/users', {
 					method: 'PATCH',
 					body: JSON.stringify({ anything: 'something' }),
@@ -396,7 +532,11 @@ describe('Index', () => {
 		})
 		describe('patchOne', () => {
 			it('patchOne without request body and response', async () => {
-				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: true, status: 200, text: () => Promise.resolve(null) } as any)
+				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+					ok: true,
+					status: 200,
+					text: () => Promise.resolve(null)
+				} as any)
 				const { patchOne } = setupFetch('http://localhost:3000')
 				const result = await patchOne('/api/v1/users', '5')
 				expect(spy).toHaveBeenCalledWith('http://localhost:3000/api/v1/users/5', {
@@ -408,7 +548,11 @@ describe('Index', () => {
 				expect(result).toEqual(null)
 			})
 			it('patchOne with request body and no response', async () => {
-				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: true, status: 200, text: () => Promise.resolve(null) } as any)
+				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+					ok: true,
+					status: 200,
+					text: () => Promise.resolve(null)
+				} as any)
 				const { patchOne } = setupFetch('http://localhost:3000')
 				const result = await patchOne<{ anything: string }>('/api/v1/users', '5', { anything: 'something' })
 				expect(spy).toHaveBeenCalledWith('http://localhost:3000/api/v1/users/5', {
@@ -421,9 +565,15 @@ describe('Index', () => {
 				expect(result).toEqual(null)
 			})
 			it('patchOne with request body and response', async () => {
-				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({ ok: true, status: 200, text: () => Promise.resolve(JSON.stringify({ something: 'anything' })) } as any)
+				const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+					ok: true,
+					status: 200,
+					text: () => Promise.resolve(JSON.stringify({ something: 'anything' }))
+				} as any)
 				const { patchOne } = setupFetch('http://localhost:3000')
-				const result = await patchOne<{ anything: string }, { something: string }>('/api/v1/users', '5', { anything: 'something' })
+				const result = await patchOne<{ anything: string }, { something: string }>('/api/v1/users', '5', {
+					anything: 'something'
+				})
 				expect(spy).toHaveBeenCalledWith('http://localhost:3000/api/v1/users/5', {
 					method: 'PATCH',
 					body: JSON.stringify({ anything: 'something' }),

@@ -22,7 +22,8 @@ export const defaults = (dest: Record<string, unknown>, ...sources: Record<strin
 		const keys = Object.keys(source)
 		// for each key
 		for (const key of keys) {
-			if (dest[key] == null && source[key] != null) { // prop doesn't exist on dest
+			if (dest[key] == null && source[key] != null) {
+				// prop doesn't exist on dest
 				dest[key] = source[key]
 			}
 		}
@@ -55,11 +56,11 @@ export const defaultsDeep = (dest: Record<string, unknown>, ...sources: Record<s
 		for (const key of keys) {
 			const destValue: unknown = dest[key]
 			const sourceValue = source[key]
-			if (destValue == null && sourceValue != null) { // prop doesn't exist on dest
+			if (destValue == null && sourceValue != null) {
+				// prop doesn't exist on dest
 				if (isRecordObject(sourceValue)) {
 					dest[key] = defaultsDeep({}, sourceValue)
-				} else
-					dest[key] = sourceValue
+				} else dest[key] = sourceValue
 			} else {
 				if (isRecordObject(destValue)) {
 					if (isRecordObject(sourceValue)) {

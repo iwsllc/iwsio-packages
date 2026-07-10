@@ -1,26 +1,31 @@
 {
-  "name": "@iwsio/iwsio-packages",
-  "version": "1.0.0",
-  "description": "",
-  "private": true,
-  "main": "",
-  "scripts": {
-    "dev": "npm-run-all -p watch:*",
-    "watch:ui": "npx tsc --build --watch"
-  },
-  "packageManager": "pnpm@10.28.1+sha512.7d7dbbca9e99447b7c3bf7a73286afaaf6be99251eb9498baefa7d406892f67b879adb3a1d7e687fc4ccc1a388c7175fbaae567a26ab44d1067b54fcb0d6a316",
-  "author": "Nathan Bridgewater",
-  "license": "ISC",
-  "workspaces": [
-    "packages/*"
-  ],
-  "dependencies": {
-    "@iwsio/eslint-config": "workspace:*",
-    "@iwsio/tsconfig": "workspace:*",
-    "eslint": "^10.2.1",
-    "npm-run-all": "^4.1.5"
-  },
-  "devDependencies": {
-    "vitest": "^4.1.5"
-  }
+	"name": "@iwsio/iwsio-packages",
+	"version": "1.0.0",
+	"description": "",
+	"private": true,
+	"main": "",
+	"scripts": {
+		"dev": "npm-run-all -p watch:*",
+		"lint": "biome check .",
+		"clean": "del-cli '**/dist' '**/coverage' '**/*.tsbuildinfo'",
+		"lint:fix": "biome check --write .",
+		"lint:fix:unsafe": "biome check --write --unsafe .",
+		"watch:ui": "npx tsc --build --watch"
+	},
+	"packageManager": "pnpm@11.11.0+sha512.4463f65fd80ed80d69bc1d4bf163ee94f605c7380fc318bb5b2ebe15f8cd12d49c51a4d59e951b401e764d3b6ca751cbf51bc50ed7001a6bcb4935e684c34882",
+	"author": "Nathan Bridgewater",
+	"license": "ISC",
+	"workspaces": [
+		"packages/*"
+	],
+	"dependencies": {
+		"@biomejs/biome": "^2.5.3",
+		"@iwsio/biome-config": "workspace:*",
+		"@iwsio/tsconfig": "workspace:*",
+		"npm-run-all": "^4.1.5"
+	},
+	"devDependencies": {
+		"del-cli": "^7.0.0",
+		"vitest": "^4.1.10"
+	}
 }

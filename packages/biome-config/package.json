@@ -1,0 +1,22 @@
+{
+	"name": "@iwsio/biome-config",
+	"version": "1.0.0-alpha.0",
+	"type": "module",
+	"description": "Shared Biome Configuration",
+	"repository": "github:iwsllc/iwsio-packages",
+	"author": "Nathan Bridgewater <info@iws.io>",
+	"license": "BSD-3-Clause",
+	"bugs": {
+		"url": "https://github.com/iwsllc/iwsio-packages/issues"
+	},
+	"homepage": "https://github.com/iwsllc/iwsio-packages/tree/main/packages/biome-config",
+	"files": [
+		"biome.json"
+	],
+	"exports": {
+		"./biome": "./biome.json"
+	},
+	"peerDependencies": {
+		"@biomejs/biome": "^2.5.3"
+	}
+}

@@ -1,4 +1,5 @@
 import type { ConfigArray } from '@eslint/config-array'
+
 export { ConfigArray }
 export interface CustomizeOptions {
 	/**

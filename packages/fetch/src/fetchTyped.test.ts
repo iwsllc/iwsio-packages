@@ -3,8 +3,13 @@ import { fetchTyped } from './fetchTyped.js'
 
 const host = 'http://localhost:3000'
 
-interface Thing { data: string }
-interface ErrorBody { message: string, stack?: string }
+interface Thing {
+	data: string
+}
+interface ErrorBody {
+	message: string
+	stack?: string
+}
 interface Movie {
 	title: string
 	year: number
@@ -24,21 +29,34 @@ describe('fetchTyped', () => {
 		vi.spyOn(window, 'fetch')
 	})
 	it('should fetch with typed response on success', async () => {
-		vi.spyOn(window, 'fetch').mockReturnValue(Promise.resolve({ json: () => Promise.resolve({ data: 'test2' }) } as any))
+		vi.spyOn(window, 'fetch').mockReturnValue(
+			Promise.resolve({
+				json: () => Promise.resolve({ data: 'test2' })
+			} as any)
+		)
 
 		const response = await fetchTyped<Thing, ErrorBody>('https://example.com/movies.json')
-		const result = await response.json() as Thing
+		const result = (await response.json()) as Thing
 		expect(result.data).to.eq('test2')
 	})
 
 	it('should fetch with typed response on success with query string parameters', async () => {
-		const spyFetch = vi.spyOn(window, 'fetch').mockReturnValue(Promise.resolve({ json: () => Promise.resolve({ data: 'test2' }) } as any))
+		const spyFetch = vi.spyOn(window, 'fetch').mockReturnValue(
+			Promise.resolve({
+				json: () => Promise.resolve({ data: 'test2' })
+			} as any)
+		)
 
-		const response = await fetchTyped<Thing, ErrorBody>('https://example.com/movies.json', { query: { pageIx: '0', pageSize: '20' } })
-		const result = await response.json() as Thing
+		const response = await fetchTyped<Thing, ErrorBody>('https://example.com/movies.json', {
+			query: { pageIx: '0', pageSize: '20' }
+		})
+		const result = (await response.json()) as Thing
 
 		expect(result.data).to.eq('test2')
-		expect(spyFetch).toHaveBeenCalledWith('https://example.com/movies.json?pageIx=0&pageSize=20', { method: 'GET', headers: { 'Content-type': 'application/json' } })
+		expect(spyFetch).toHaveBeenCalledWith('https://example.com/movies.json?pageIx=0&pageSize=20', {
+			method: 'GET',
+			headers: { 'Content-type': 'application/json' }
+		})
 	})
 
 	it('should fetch with empty response on success', async () => {
@@ -50,13 +68,18 @@ describe('fetchTyped', () => {
 	})
 
 	it('should return typed Error when fail', async () => {
-		vi.spyOn(window, 'fetch').mockReturnValue(Promise.resolve({ ok: false, json: () => Promise.resolve({ message: 'error', stack: 'stack' }) } as any))
+		vi.spyOn(window, 'fetch').mockReturnValue(
+			Promise.resolve({
+				ok: false,
+				json: () => Promise.resolve({ message: 'error', stack: 'stack' })
+			} as any)
+		)
 
 		const response = await fetchTyped<Thing, ErrorBody>('https://example.com/movies.json')
 		let result: Thing | null = null
 		let error: ErrorBody | null = null
-		if (response.ok) result = await response.json() as Thing
-		else error = await response.json() as ErrorBody
+		if (response.ok) result = (await response.json()) as Thing
+		else error = (await response.json()) as ErrorBody
 
 		expect(error).to.be.ok
 		if (error == null) return
@@ -75,16 +98,8 @@ describe('fetchTyped', () => {
 			title: 'The Matrix',
 			year: 1999,
 			director: 'The Wachowski Brothers',
-			cast: [
-				'Keanu Reeves',
-				'Laurence Fishburne',
-				'Carrie-Anne Moss',
-				'Hugo Weaving'
-			],
-			genres: [
-				'Action',
-				'Sci-Fi'
-			],
+			cast: ['Keanu Reeves', 'Laurence Fishburne', 'Carrie-Anne Moss', 'Hugo Weaving'],
+			genres: ['Action', 'Sci-Fi'],
 			rating: 8.7
 		}
 		beforeEach(() => {
@@ -119,7 +134,10 @@ describe('fetchTyped', () => {
 			if (result == null) return
 
 			// data assertion
-			expect(result).to.deep.eq({ message: 'Fake error', stack: 'Fake stack trace' })
+			expect(result).to.deep.eq({
+				message: 'Fake error',
+				stack: 'Fake stack trace'
+			})
 
 			expect(isError(result)).to.be.true
 		})

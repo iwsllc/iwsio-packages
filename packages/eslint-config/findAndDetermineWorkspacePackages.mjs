@@ -6,9 +6,7 @@ import YAML from 'yaml'
 
 function findPnpmWorkspaceConfig(rootDir) {
 	const entries = readdirSync(rootDir, { withFileTypes: true })
-	const found = entries
-		.filter(e => e.isFile() && /^pnpm-workspace\.(yml|yaml)$/iu.test(e.name))
-		.map(e => e.name)
+	const found = entries.filter((e) => e.isFile() && /^pnpm-workspace\.(yml|yaml)$/iu.test(e.name)).map((e) => e.name)
 	if (found.length > 1) throw new Error('Multiple pnpm-workspaces files found')
 	if (found.length === 0) return undefined
 	return found[0]
@@ -41,7 +39,7 @@ export async function findAndDetermineWorkspacePackages(rootDir, options = {}) {
 
 	// /** @type {string[] | undefined} */
 	// eslint-disable-next-line no-useless-assignment -- I think it's blind
-	let relativePackagePatterns = undefined
+	let relativePackagePatterns
 
 	if (pnpmWorkspacePath != null) {
 		// read pattern from the pnpm-workspace.yaml
@@ -56,7 +54,7 @@ export async function findAndDetermineWorkspacePackages(rootDir, options = {}) {
 		if (debug) console.log('read from package.json workspaces')
 	}
 
-	const pattern = relativePackagePatterns.map(p => join(rootDir, p, 'package.json'))
+	const pattern = relativePackagePatterns.map((p) => join(rootDir, p, 'package.json'))
 
 	const workspacePackageNames = []
 	for await (const entry of fg.stream(pattern, { concurrency: 4 })) {
