@@ -1,10 +1,10 @@
-name: "@iwsio/eslint-config: PUSH to main"
+name: "@iwsio/biome-config: PUSH to main"
 
 on:
   push:
     branches: [ main ]
     paths:
-      - 'packages/eslint-config/**'
+      - 'packages/biome-config/**'
 
 permissions:
   id-token: write  # Required for OIDC
@@ -22,8 +22,8 @@ jobs:
       cache: ''
       node-version-file: '.nvmrc'
       scope: '@iwsio'
-      version-command: npm version patch -w packages/eslint-config || true
-      version-workspace: packages/eslint-config
+      version-command: npm version patch -w packages/biome-config || true
+      version-workspace: packages/biome-config
       tag-includes-name: true
     secrets:
       IWS_VERSION_BOT_PK: ${{ secrets.IWS_VERSION_BOT_PK}}
@@ -42,7 +42,7 @@ jobs:
       registry-url: 'https://registry.npmjs.org'
       install-command: 
       build-command: 
-      publish-command: pnpm -F eslint-config publish --access public
+      publish-command: pnpm -F biome-config publish --access public
     secrets:
       # This token is used for reading npm packages; use when private packages are used
       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

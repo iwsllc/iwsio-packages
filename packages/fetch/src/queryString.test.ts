@@ -4,13 +4,26 @@ describe('query-string', () => {
 	describe('stringify', () => {
 		test('When serializing simple object', () => {
 			const v = encodeURIComponent('&#? ')
-			const result = stringify({ key1: 'value1', key2: 'value2', key3: 3, key4: true, key5: '&#? ', key6: { something: 'unsupported' } })
-			expect(result).to.eq('?key1=value1&key2=value2&key3=3&key4=true&key5=' + v)
+			const result = stringify({
+				key1: 'value1',
+				key2: 'value2',
+				key3: 3,
+				key4: true,
+				key5: '&#? ',
+				key6: { something: 'unsupported' }
+			})
+			expect(result).to.eq(`?key1=value1&key2=value2&key3=3&key4=true&key5=${v}`)
 		})
 		test('When serializing object with array of values', () => {
 			const v = encodeURIComponent('&#? ')
-			const result = stringify({ key1: ['value1', 'value1-2'], key2: 'value2', key3: 3, key4: true, key5: '&#? ' })
-			expect(result).to.eq('?key1=value1&key1=value1-2&key2=value2&key3=3&key4=true&key5=' + v)
+			const result = stringify({
+				key1: ['value1', 'value1-2'],
+				key2: 'value2',
+				key3: 3,
+				key4: true,
+				key5: '&#? '
+			})
+			expect(result).to.eq(`?key1=value1&key1=value1-2&key2=value2&key3=3&key4=true&key5=${v}`)
 		})
 		test('When serializing undefined props', () => {
 			expect(stringify({ page: 2 })).to.eql('?page=2')
@@ -18,7 +31,12 @@ describe('query-string', () => {
 			expect(stringify({ page: 2, pageSize: 3 })).to.eql('?page=2&pageSize=3')
 		})
 		test('When serializing arrays of arrays: i.e. sort values', () => {
-			const result = stringify({ sort: [['name', 1], ['age', -1]] })
+			const result = stringify({
+				sort: [
+					['name', 1],
+					['age', -1]
+				]
+			})
 			expect(result).to.eq('?sort=name%2C1&sort=age%2C-1')
 		})
 	})
@@ -26,21 +44,35 @@ describe('query-string', () => {
 	describe('parse', () => {
 		test('When parsing qs', () => {
 			const result = parse('key1=value1&key1=value1-2&key2=value2&key3=3&key4=true&key5=%26%23%3F%20')
-			expect(result).to.deep.eq({ key1: ['value1', 'value1-2'], key2: 'value2', key3: '3', key4: 'true', key5: '&#? ' })
+			expect(result).to.deep.eq({
+				key1: ['value1', 'value1-2'],
+				key2: 'value2',
+				key3: '3',
+				key4: 'true',
+				key5: '&#? '
+			})
 		})
 		test('When parsing qs dup keys', () => {
 			const result = parse('key1=value1&key1=value1-2&key2=value2&key3=3&key4=true&key5=%26%23%3F%20')
-			expect(result).to.deep.eq({ key1: ['value1', 'value1-2'], key2: 'value2', key3: '3', key4: 'true', key5: '&#? ' })
+			expect(result).to.deep.eq({
+				key1: ['value1', 'value1-2'],
+				key2: 'value2',
+				key3: '3',
+				key4: 'true',
+				key5: '&#? '
+			})
 		})
 		test('parsing array of arrays', () => {
-			const value = [['name', '1'], ['age', '-1']]
+			const value = [
+				['name', '1'],
+				['age', '-1']
+			]
 			const qs = stringify({ sort: value })
 			expect(qs).to.eq('?sort=name%2C1&sort=age%2C-1')
 			const parsed = parse(qs)
 
 			// I'm good with this... we can't make assumptions on content of the value... so this is an expect result that parses one level down
-			expect(parsed).to.deep.eq({ sort: ['name,1', 'age,-1'] }
-			)
+			expect(parsed).to.deep.eq({ sort: ['name,1', 'age,-1'] })
 		})
 	})
 

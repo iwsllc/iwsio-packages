@@ -1,9 +1,9 @@
 {
-  "extends": "@iwsio/tsconfig/browser",
+	"extends": "@iwsio/tsconfig/browser",
 	"compilerOptions": {
 		"outDir": "./dist",
 		"rootDir": "./src",
-		"types": [ "vitest/globals", "@testing-library/jest-dom/vitest"	]
+		"types": ["vitest/globals", "@testing-library/jest-dom/vitest"]
 	},
-	"include": ["src/**/*"],
+	"include": ["src/**/*"]
 }

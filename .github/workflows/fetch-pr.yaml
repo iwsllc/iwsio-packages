@@ -16,9 +16,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  testing:
+  checks:
     if: ${{github.event.pull_request.draft == false && !contains(github.event.head_commit.message, '#skip') }}
-    uses: iwsllc/workflows/.github/workflows/test.yaml@v4
+    uses: iwsllc/workflows/.github/workflows/test.yaml@v8
     with:
       registry-url: 'https://registry.npmjs.org'
       scope: '@iwsio'
@@ -26,4 +26,4 @@ jobs:
       cache: pnpm
       node-version-file: '.nvmrc'
       install-command: pnpm install
-      test-command: pnpm -F fetch test
+      test-command: pnpm -F fetch checks

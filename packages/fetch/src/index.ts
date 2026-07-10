@@ -1,6 +1,6 @@
 import { fetchTyped } from './fetchTyped.js'
 import { resolveResponse } from './resolveResponse.js'
-import { FetchArgs } from './types.js'
+import type { FetchArgs } from './types.js'
 
 export * from './FetchError.js'
 export * from './isFetchError.js'
@@ -29,7 +29,11 @@ export function setupFetch<E = unknown>(baseUrl: string = '', defaultOptions: Pa
 		return await fetchTyped<T, E>(`${baseUrl}${endpoint}`, options, defaultOptions)
 	}
 
-	async function getOne<Response = unknown>(endpoint: string, id: string | undefined = undefined, options: FetchArgs = {}) {
+	async function getOne<Response = unknown>(
+		endpoint: string,
+		id: string | undefined = undefined,
+		options: FetchArgs = {}
+	) {
 		const resolvedEndpoint = id == null ? endpoint : `${endpoint}/${encodeURIComponent(id)}`
 		const res = await fetchWithDefaultOptions<Response, E>(resolvedEndpoint, options)
 		return resolveResponse(res, options)
@@ -41,26 +45,54 @@ export function setupFetch<E = unknown>(baseUrl: string = '', defaultOptions: Pa
 	}
 
 	async function getMany<Response = unknown>(endpoint: string, options: FetchArgs = {}) {
-		const res = await fetchWithDefaultOptions<Array<Response>, E>(endpoint, options)
+		const res = await fetchWithDefaultOptions<Response[], E>(endpoint, options)
 		return resolveResponse(res, options)
 	}
 
-	async function send<Request = unknown, Response = unknown>(endpoint: string, method: string, data?: Request, options: FetchArgs = {}) {
-		const res = await fetchWithDefaultOptions<Response, E>(endpoint, { ...options, method, json: data })
+	async function send<Request = unknown, Response = unknown>(
+		endpoint: string,
+		method: string,
+		data?: Request,
+		options: FetchArgs = {}
+	) {
+		const res = await fetchWithDefaultOptions<Response, E>(endpoint, {
+			...options,
+			method,
+			json: data
+		})
 		return resolveResponse(res, options)
 	}
 
-	async function sendOne<Request = unknown, Response = unknown>(endpoint: string, method: string, id: string, data?: Request, options: FetchArgs = {}) {
+	async function sendOne<Request = unknown, Response = unknown>(
+		endpoint: string,
+		method: string,
+		id: string,
+		data?: Request,
+		options: FetchArgs = {}
+	) {
 		if (id == null) throw new Error('Cannot update without id.')
-		const res = await fetchWithDefaultOptions<Response, E>(`${endpoint}/${encodeURIComponent(id)}`, { ...options, method, json: data })
+		const res = await fetchWithDefaultOptions<Response, E>(`${endpoint}/${encodeURIComponent(id)}`, {
+			...options,
+			method,
+			json: data
+		})
 		return resolveResponse(res, options)
 	}
 
-	async function post<Request = unknown, Response = unknown>(endpoint: string, data?: Request, options: FetchArgs = {}) {
+	async function post<Request = unknown, Response = unknown>(
+		endpoint: string,
+		data?: Request,
+		options: FetchArgs = {}
+	) {
 		return await send<Request, Response>(endpoint, 'POST', data, options)
 	}
 
-	async function postOne<Request = unknown, Response = unknown>(endpoint: string, id: string, data?: Request, options: FetchArgs = {}) {
+	async function postOne<Request = unknown, Response = unknown>(
+		endpoint: string,
+		id: string,
+		data?: Request,
+		options: FetchArgs = {}
+	) {
 		return await sendOne<Request, Response>(endpoint, 'POST', id, data, options)
 	}
 
@@ -68,15 +100,29 @@ export function setupFetch<E = unknown>(baseUrl: string = '', defaultOptions: Pa
 		return await send<Request, Response>(endpoint, 'PUT', data, options)
 	}
 
-	async function putOne<Request = unknown, Response = unknown>(endpoint: string, id: string, data?: Request, options: FetchArgs = {}) {
+	async function putOne<Request = unknown, Response = unknown>(
+		endpoint: string,
+		id: string,
+		data?: Request,
+		options: FetchArgs = {}
+	) {
 		return await sendOne<Request, Response>(endpoint, 'PUT', id, data, options)
 	}
 
-	async function patch<Request = unknown, Response = unknown>(endpoint: string, data?: Request, options: FetchArgs = {}) {
+	async function patch<Request = unknown, Response = unknown>(
+		endpoint: string,
+		data?: Request,
+		options: FetchArgs = {}
+	) {
 		return await send<Request, Response>(endpoint, 'PATCH', data, options)
 	}
 
-	async function patchOne<Request = unknown, Response = unknown>(endpoint: string, id: string, data?: Request, options: FetchArgs = {}) {
+	async function patchOne<Request = unknown, Response = unknown>(
+		endpoint: string,
+		id: string,
+		data?: Request,
+		options: FetchArgs = {}
+	) {
 		return await sendOne<Request, Response>(endpoint, 'PATCH', id, data, options)
 	}
 
@@ -84,7 +130,12 @@ export function setupFetch<E = unknown>(baseUrl: string = '', defaultOptions: Pa
 		return await send<Request, Response>(endpoint, 'DELETE', data, options)
 	}
 
-	async function delOne<Request = unknown, Response = unknown>(endpoint: string, id: string, data?: Request, options: FetchArgs = {}) {
+	async function delOne<Request = unknown, Response = unknown>(
+		endpoint: string,
+		id: string,
+		data?: Request,
+		options: FetchArgs = {}
+	) {
 		return await sendOne<Request, Response>(endpoint, 'DELETE', id, data, options)
 	}
 

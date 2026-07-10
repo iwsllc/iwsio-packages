@@ -1,0 +1,33 @@
+{
+	"biome.enabled": true,
+	"biome.requireConfiguration": true,
+
+	"prettier.enable": false,
+
+	"eslint.enable": false,
+	"eslint.format.enable": false,
+	"eslint.lintTask.enable": false,
+	"eslint.probe": [],
+	"eslint.validate": [],
+
+	"editor.formatOnSave": true,
+	"editor.codeActionsOnSave": {
+		"source.fixAll.biome": "explicit"
+	},
+
+	"[typescript]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[typescriptreact]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[javascript]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[javascriptreact]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[css]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	}
+}

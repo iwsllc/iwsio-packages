@@ -1,5 +1,5 @@
 import { defaultsDeep } from './defaults.js'
-import { FetchArgs, FetchOptions } from './types.js'
+import type { FetchArgs, FetchOptions } from './types.js'
 
 export function defaultFetchOptions(...overrides: FetchArgs[]): FetchOptions & RequestInit {
 	const defaultArgs = {

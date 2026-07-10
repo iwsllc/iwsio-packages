@@ -17,14 +17,16 @@ describe('resolveResponse', () => {
 
 	it('should resolve response with text body', async () => {
 		const res = new Response('This is a test', { status: 200 })
-		const result = await resolveResponse<{ foo: string }>(res, { resolveWithResponseBody: true })
+		const result = await resolveResponse<{ foo: string }>(res, {
+			resolveWithResponseBody: true
+		})
 		expect(result).toEqual('This is a test')
 	})
 
 	it('should reject response', async () => {
 		const res = new Response('{"message": "error"}', { status: 400 })
 		try {
-			await resolveResponse<{ foo: string }, { error?: string, stack?: string }>(res)
+			await resolveResponse<{ foo: string }, { error?: string; stack?: string }>(res)
 		} catch (err) {
 			expect(err).toBeInstanceOf(FetchError)
 			if (!isFetchError(err)) throw new Error('Invalid error')
