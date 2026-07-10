@@ -6,8 +6,8 @@
 	"main": "",
 	"scripts": {
 		"dev": "npm-run-all -p watch:*",
-		"lint": "biome check .",
 		"clean": "del-cli '**/dist' '**/coverage' '**/*.tsbuildinfo'",
+		"lint": "biome check .",
 		"lint:fix": "biome check --write .",
 		"lint:fix:unsafe": "biome check --write --unsafe .",
 		"watch:ui": "npx tsc --build --watch"

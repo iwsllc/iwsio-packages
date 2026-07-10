@@ -4,11 +4,6 @@
 		"declarationMap": false,
 		"inlineSources": true
 	},
-	"exclude": [
-		"node_modules",
-		"**/*.test.*",
-		"**/__tests__/*",
-		"**/__mocks__/*"
-	],
+	"exclude": ["node_modules", "**/*.test.*", "**/__tests__/*", "**/__mocks__/*"],
 	"references": []
 }

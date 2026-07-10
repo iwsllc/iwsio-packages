@@ -5,15 +5,18 @@
 	"description": "A simple set of functions to enable typed fetching using built-in fetch.",
 	"repository": "github:iwsllc/iwsio-packages",
 	"scripts": {
+		"checks": "pnpm run '/^checks:/'",
+		"checks:test": "pnpm test",
+		"checks:lint": "pnpm lint",
+		"lint": "biome check .",
+		"lint:fix": "biome check --write .",
+		"lint:fix:unsafe": "biome check --write --unsafe .",
+		"clean": "del-cli '**/dist' '**/coverage' '**/*.tsbuildinfo'",
 		"test": "vitest --run --passWithNoTests",
 		"server": "node ./src/__mocks__/server.cjs",
 		"build": "tsc --build tsconfig.build.json",
-		"clean": "npm-run-all -s clean:ts clean:fs",
-		"clean:fs": "rimraf dist",
-		"clean:ts": "tsc --build --clean tsconfig.build.json",
 		"prewatch": "tsc --build --clean tsconfig.build.json",
-		"watch": "tsc --build watch --preserveWatchOutput tsconfig.build.json",
-		"lint": "eslint ."
+		"watch": "tsc --build watch --preserveWatchOutput tsconfig.build.json"
 	},
 	"author": "Nathan Bridgewater",
 	"type": "module",
