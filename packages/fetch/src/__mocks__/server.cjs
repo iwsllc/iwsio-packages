@@ -32,5 +32,6 @@ app.get('/test-500-json', (_req, res) => {
 })
 
 app.listen(3000, (..._args) => {
+	// biome-ignore lint/suspicious/noConsole: server code
 	console.log('Listening on port 3000')
 })

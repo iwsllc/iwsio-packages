@@ -46,19 +46,30 @@
 					"options": { "syntax": "shorthand" }
 				},
 				"noUselessElse": "error",
-				"useShorthandAssign": "error"
+				"useShorthandAssign": "error",
+        "useConsistentObjectDefinitions": {
+          "level": "error",
+          "options": {
+            "syntax": "shorthand"
+          }
+        }
 			},
 			"suspicious": {
+				"noAssignInExpressions": "off",
 				"noImplicitAnyLet": "warn",
-				"noAssignInExpressions": "off"
+        "noConsole": "error"
 			},
 			"correctness": {
+        "noUnusedImports": {
+          "level": "error",
+          "fix": "safe"
+        },
 				"noUnusedVariables": {
 					"level": "error",
-					"options": { "ignoreRestSiblings": true }
+					"options": { "ignoreRestSiblings": true },
+					"fix": "safe"
 				},
-				"noUnusedFunctionParameters": "error",
-				"noUnusedImports": "error"
+				"noUnusedFunctionParameters": "error"
 			},
 			"complexity": {
 				"useArrowFunction": "error",
