@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noConsole: tooling */
 import { readdirSync, readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 

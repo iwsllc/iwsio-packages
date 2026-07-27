@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noConsole: tooling */
 import eslint from '@eslint/js'
 import eslintReact from '@eslint-react/eslint-plugin'
 import stylistic from '@stylistic/eslint-plugin'
