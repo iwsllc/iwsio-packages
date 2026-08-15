@@ -90,7 +90,41 @@ describe('fetchTyped', () => {
 	})
 
 	it('should work with query options')
-	it('should work with json body')
+
+	it('should serialize a json body', async () => {
+		const spyFetch = vi.spyOn(window, 'fetch').mockReturnValue(
+			Promise.resolve({
+				json: () => Promise.resolve({ data: 'ok' })
+			} as any)
+		)
+
+		await fetchTyped('https://example.com/items/1', { method: 'PATCH', json: { name: 'Consulting' } })
+
+		expect(spyFetch).toHaveBeenCalledWith('https://example.com/items/1', {
+			method: 'PATCH',
+			headers: { 'Content-type': 'application/json' },
+			body: JSON.stringify({ name: 'Consulting' })
+		})
+	})
+
+	// A null property is how an API is told to clear a field. The options merge used to drop it,
+	// so the request arrived without the key at all and the field was silently left unchanged.
+	it('should keep null properties in a json body', async () => {
+		const spyFetch = vi.spyOn(window, 'fetch').mockReturnValue(
+			Promise.resolve({
+				json: () => Promise.resolve({ data: 'ok' })
+			} as any)
+		)
+
+		await fetchTyped('https://example.com/items/1', {
+			method: 'PATCH',
+			json: { name: 'Consulting', description: null }
+		})
+
+		const body = spyFetch.mock.calls[0][1]?.body as string
+		expect(JSON.parse(body)).toEqual({ name: 'Consulting', description: null })
+	})
+
 	it('should work with RequestInit overrides')
 
 	describe.skip('Integration tests', () => {
