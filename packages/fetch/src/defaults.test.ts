@@ -98,3 +98,36 @@ describe('defaultsDeep', () => {
 		expect(result).to.deep.equal({ a: 1, b: 2, c: 4, d: { e: 5, f: 1 } })
 	})
 })
+
+describe('defaultsDeep with non-plain objects', () => {
+	// Regression: a Blob/File body was deep-copied into a plain {} — Object.keys sees none
+	// of its internal slots — so it reached fetch() as "[object Object]" with a 15-byte
+	// Content-Length instead of the file. Non-plain objects must pass through by reference.
+	test('passes a Blob body through by reference', () => {
+		const blob = new Blob(['<svg></svg>'], { type: 'image/svg+xml' })
+		const result = defaultsDeep({}, { body: blob }, { method: 'POST' })
+
+		expect(result.body).to.equal(blob)
+		expect(result.body).to.be.instanceOf(Blob)
+	})
+
+	test('passes FormData, URLSearchParams and Map through by reference', () => {
+		const formData = new FormData()
+		const params = new URLSearchParams({ a: '1' })
+		const map = new Map([['a', 1]])
+		const result = defaultsDeep({}, { formData, params, map })
+
+		expect(result.formData).to.equal(formData)
+		expect(result.params).to.equal(params)
+		expect(result.map).to.equal(map)
+	})
+
+	test('still merges plain and null-prototype records', () => {
+		const bare = Object.assign(Object.create(null), { b: 2 })
+		const result = defaultsDeep({ headers: { a: 1 } }, { headers: { a: 9, c: 3 } }, { bare })
+
+		expect(result.headers).to.deep.eq({ a: 1, c: 3 })
+		expect(result.bare).to.deep.eq({ b: 2 })
+		expect(result.bare).to.not.equal(bare) // copied, not shared
+	})
+})
