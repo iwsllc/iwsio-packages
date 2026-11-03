@@ -1,6 +1,6 @@
 {
 	"name": "@iwsio/tsconfig",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"description": "IWSLLC Shared TypeScript Configuration",
 	"main": "./tsconfig-base.json",
 	"exports": {
