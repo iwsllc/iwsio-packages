@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { defaults, defaultsDeep } from './defaults.js'
 
 describe('defaults', () => {
@@ -93,7 +92,7 @@ describe('defaultsDeep', () => {
 		expect((result.four as any).five).to.not.be.ok
 	})
 
-	test('deep object (value null), deep defaults, mismatching types', () => {
+	test('multiple sources, nested objects merged, first value wins', () => {
 		const result = defaultsDeep({ a: 1, d: { f: 1 } }, { b: 2 }, { b: 3, c: 4 }, { d: { e: 5, f: 2 } })
 		expect(result).to.deep.equal({ a: 1, b: 2, c: 4, d: { e: 5, f: 1 } })
 	})
