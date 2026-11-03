@@ -1,4 +1,3 @@
 packages:
   - 'packages/*'
-allowBuilds:
-  unrs-resolver: true
+  - '!packages/eslint-config'
