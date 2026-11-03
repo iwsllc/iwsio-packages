@@ -3,6 +3,7 @@
 ## Getting Started
 
 ### Standard TSConfig
+
 This is used for general purpose Node based or server side applications.
 
 ```json
@@ -17,6 +18,7 @@ This is used for general purpose Node based or server side applications.
 ```
 
 ### Browser (not JSX)
+
 Extends base and includes `"lib": ["dom", "dom.iterable", "esnext"]`
 
 ```json
@@ -32,6 +34,7 @@ Extends base and includes `"lib": ["dom", "dom.iterable", "esnext"]`
 ```
 
 ### JSX/React support
+
 Includes `/browser` and adds `"jsx": "react-jsx"`
 
 ```json
