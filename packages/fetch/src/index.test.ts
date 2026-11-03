@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { FetchError, setupFetch } from './index.js'
 
 globalThis.fetch = vi.fn() as any

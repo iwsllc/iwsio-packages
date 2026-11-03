@@ -15,7 +15,6 @@ export async function resolveResponse<T = never, E = unknown>(
 	let body: unknown
 	try {
 		if (text.length > 0) body = JSON.parse(text)
-		// eslint-disable-next-line no-empty
 	} catch {} // ignoring json parse
 
 	if (res.ok) {
