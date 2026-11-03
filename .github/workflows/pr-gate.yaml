@@ -1,0 +1,123 @@
+name: "PR gate"
+
+on:
+  pull_request:
+    branches: [main]
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+      - converted_to_draft
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    outputs:
+      packages: ${{ steps.filter.outputs.packages }}
+    steps:
+      - uses: actions/checkout@v6
+      - id: filter
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "$BASE_SHA" "$HEAD_SHA"
+
+          changed=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA")
+          echo "Changed files:"
+          echo "$changed"
+
+          # Docs-only changes never warrant unit tests.
+          code_changed=$(echo "$changed" | grep -vE '(\.md|(^|/)LICENSE[^/]*)$' || true)
+
+          # Root config and the shared tsconfig package affect every package's build/test.
+          if echo "$code_changed" | grep -qE '^(pnpm-lock\.yaml|pnpm-workspace\.yaml|package\.json|tsconfig[^/]*\.json|vitest\.config\.ts|\.nvmrc|packages/tsconfig/.*)$'; then
+            root_changed=true
+          else
+            root_changed=false
+          fi
+
+          selected=()
+          for dir in packages/*/; do
+            pkg=$(basename "$dir")
+            jq -e '.scripts.test' "$dir/package.json" > /dev/null 2>&1 || continue
+            if [ "$root_changed" = true ] || echo "$code_changed" | grep -q "^packages/$pkg/"; then
+              selected+=("$pkg")
+            fi
+          done
+
+          if [ ${#selected[@]} -eq 0 ]; then
+            echo 'packages=[]' >> "$GITHUB_OUTPUT"
+          else
+            printf -v joined '"%s",' "${selected[@]}"
+            echo "packages=[${joined%,}]" >> "$GITHUB_OUTPUT"
+          fi
+          echo "Selected: ${selected[*]:-<none>}"
+
+  lint:
+    if: ${{ !github.event.pull_request.draft }}
+    uses: iwsllc/workflows/.github/workflows/test.yaml@v9
+    with:
+      use-pnpm: true
+      registry-url: "https://registry.npmjs.org"
+      scope: "@iwsio"
+      cache: pnpm
+      node-version-file: ".nvmrc"
+      install-command: pnpm install
+      test-command: pnpm lint
+
+  test:
+    needs: changes
+    if: ${{ needs.changes.outputs.packages != '[]' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{ fromJSON(needs.changes.outputs.packages) }}
+    uses: iwsllc/workflows/.github/workflows/test.yaml@v9
+    with:
+      use-pnpm: true
+      registry-url: "https://registry.npmjs.org"
+      scope: "@iwsio"
+      cache: pnpm
+      node-version-file: ".nvmrc"
+      install-command: pnpm install
+      build-command: pnpm -F ./packages/${{ matrix.package }} run --if-present build
+      test-command: pnpm -F ./packages/${{ matrix.package }} test
+
+  gate:
+    # The single required check. Always runs so a docs-only PR is not blocked
+    # waiting on a matrix that was intentionally empty.
+    needs: [changes, lint, test]
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          DRAFT: ${{ github.event.pull_request.draft }}
+          CHANGES: ${{ needs.changes.result }}
+          LINT: ${{ needs.lint.result }}
+          TEST: ${{ needs.test.result }}
+        run: |
+          set -euo pipefail
+          echo "draft=$DRAFT changes=$CHANGES lint=$LINT test=$TEST"
+          # Fail drafts so the merge button is never offered; ready_for_review re-runs the gate.
+          if [ "$DRAFT" = "true" ]; then
+            echo "::error::PR is a draft; mark ready for review to run checks"; exit 1
+          fi
+          if [ "$CHANGES" != "success" ]; then
+            echo "::error::change detection failed"; exit 1
+          fi
+          if [ "$LINT" != "success" ]; then
+            echo "::error::lint did not pass ($LINT)"; exit 1
+          fi
+          # 'skipped' is the empty-matrix case and is a legitimate pass.
+          if [ "$TEST" != "success" ] && [ "$TEST" != "skipped" ]; then
+            echo "::error::package tests did not pass ($TEST)"; exit 1
+          fi
+          echo "OK"

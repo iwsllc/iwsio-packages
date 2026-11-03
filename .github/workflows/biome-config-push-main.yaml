@@ -16,6 +16,7 @@ jobs:
     concurrency:
       group: 'versioning-automation'
       cancel-in-progress: false
+      queue: max
     uses: iwsllc/workflows/.github/workflows/version-as-app.yaml@main
     with:
       ref: main
