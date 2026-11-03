@@ -5,27 +5,28 @@
 	"private": true,
 	"main": "",
 	"scripts": {
-		"dev": "npm-run-all -p watch:*",
+		"dev": "pnpm -r --parallel watch",
 		"clean": "del-cli '**/dist' '**/coverage' '**/*.tsbuildinfo'",
 		"lint": "biome check .",
 		"lint:fix": "biome check --write .",
 		"lint:fix:unsafe": "biome check --write --unsafe .",
-		"watch:ui": "npx tsc --build --watch"
+		"test": "vitest --run"
 	},
-	"packageManager": "pnpm@11.11.0+sha512.4463f65fd80ed80d69bc1d4bf163ee94f605c7380fc318bb5b2ebe15f8cd12d49c51a4d59e951b401e764d3b6ca751cbf51bc50ed7001a6bcb4935e684c34882",
+	"packageManager": "pnpm@12.16.1",
 	"author": "Nathan Bridgewater",
 	"license": "ISC",
 	"workspaces": [
-		"packages/*"
+		"packages/*",
+		"!packages/eslint-config"
 	],
 	"dependencies": {
-		"@biomejs/biome": "^2.5.5",
+		"@biomejs/biome": "^2.6.4",
 		"@iwsio/biome-config": "workspace:*",
-		"@iwsio/tsconfig": "workspace:*",
-		"npm-run-all": "^4.1.5"
+		"@iwsio/tsconfig": "workspace:*"
 	},
 	"devDependencies": {
-		"del-cli": "^7.0.0",
-		"vitest": "^4.1.10"
+		"del-cli": "^8.0.1",
+		"typescript": "^7.0.2",
+		"vitest": "^5.0.5"
 	}
 }
