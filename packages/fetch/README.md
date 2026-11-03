@@ -60,6 +60,7 @@ try {
 ```
 
 ## React Query
+
 Here are a few ways you can use the above typed fetch with React Query.
 
 ```ts
