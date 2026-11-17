@@ -20,13 +20,13 @@
 		"!packages/eslint-config"
 	],
 	"dependencies": {
-		"@biomejs/biome": "^2.6.4",
+		"@biomejs/biome": "^2.6.8",
 		"@iwsio/biome-config": "workspace:*",
 		"@iwsio/tsconfig": "workspace:*"
 	},
 	"devDependencies": {
 		"del-cli": "^8.0.1",
 		"typescript": "^7.0.2",
-		"vitest": "^5.0.5"
+		"vitest": "^5.1.0"
 	}
 }
