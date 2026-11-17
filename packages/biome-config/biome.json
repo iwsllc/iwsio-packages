@@ -1,5 +1,4 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.6.4/schema.json",
 	"root": false,
 	"formatter": {
 		"enabled": true,
@@ -52,23 +51,23 @@
 				},
 				"noUselessElse": "error",
 				"useShorthandAssign": "error",
-        "useConsistentObjectDefinitions": {
-          "level": "error",
-          "options": {
-            "syntax": "shorthand"
-          }
-        }
+				"useConsistentObjectDefinitions": {
+					"level": "error",
+					"options": {
+						"syntax": "shorthand"
+					}
+				}
 			},
 			"suspicious": {
 				"noAssignInExpressions": "off",
 				"noImplicitAnyLet": "warn",
-        "noConsole": "error"
+				"noConsole": "error"
 			},
 			"correctness": {
-        "noUnusedImports": {
-          "level": "error",
-          "fix": "safe"
-        },
+				"noUnusedImports": {
+					"level": "error",
+					"fix": "safe"
+				},
 				"noUnusedVariables": {
 					"level": "error",
 					"options": { "ignoreRestSiblings": true },
@@ -105,7 +104,7 @@
 			}
 		},
 		{
-			"includes": ["**/*.config.*", "**/vite.config.mts", "**/vitest.config.ts"],
+			"includes": ["**/*.config.*"],
 			"linter": {
 				"rules": {
 					"style": {

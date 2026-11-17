@@ -21,7 +21,7 @@ Install this package alongside its `@biomejs/biome` peer dependency:
 pnpm add -D @iwsio/biome-config @biomejs/biome
 ```
 
-> Peer dependency: `@biomejs/biome@^2.5.3`
+> Peer dependency: `@biomejs/biome@^2.6.8`
 
 ## Usage
 
@@ -29,7 +29,7 @@ Extend the shared config from your project's `biome.json`:
 
 ```json
 {
-	"$schema": "https://biomejs.dev/schemas/2.5.3/schema.json",
+	"$schema": "https://biomejs.dev/schemas/2.6.8/schema.json",
 	"extends": ["@iwsio/biome-config/biome"],
 	"vcs": {
 		"enabled": true,
